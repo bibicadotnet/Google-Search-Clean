@@ -56,6 +56,24 @@
         }
       } catch (err) {}
     });
+
+    // Clean Maps links in DOM (tab Maps on search results page)
+    document.querySelectorAll('a[href*="maps.google.com"], a[href*="/maps"]').forEach(link => {
+      try {
+        const linkUrl = new URL(link.href);
+        if (linkUrl.hostname === 'maps.google.com' || linkUrl.pathname.startsWith('/maps')) {
+          const keysToDelete = [];
+          for (const key of linkUrl.searchParams.keys()) {
+            if (key !== 'q') keysToDelete.push(key);
+          }
+          if (keysToDelete.length > 0 || linkUrl.hash) {
+            keysToDelete.forEach(key => linkUrl.searchParams.delete(key));
+            linkUrl.hash = '';
+            link.href = linkUrl.href;
+          }
+        }
+      } catch (err) {}
+    });
   }
 
   // 1. Initial check when script is executed at document_start
@@ -67,7 +85,24 @@
     return;
   }
 
-  // Process URL cleaning on Google Search, Travel (Flights), and Finance pages
+  // Process URL cleaning on Google Search, Travel (Flights), Finance, and Maps pages
+  const isMapsPage = currentUrl.hostname === 'maps.google.com' ||
+                     currentUrl.pathname.startsWith('/maps');
+
+  // Handle Google Maps URL cleaning
+  if (isMapsPage) {
+    const keysToDelete = [];
+    for (const key of currentUrl.searchParams.keys()) {
+      if (key !== 'q') keysToDelete.push(key);
+    }
+    if (keysToDelete.length > 0) {
+      keysToDelete.forEach(key => currentUrl.searchParams.delete(key));
+      if (currentUrl.hash) currentUrl.hash = '';
+      window.location.replace(currentUrl.href);
+      return;
+    }
+  }
+
   const isSearchPage = currentUrl.pathname === '/search' || 
                        currentUrl.pathname.startsWith('/travel/') || 
                        currentUrl.pathname.startsWith('/finance/');

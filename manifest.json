@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Google Search Clean",
-  "version": "1.0",
+  "version": "1.0.1",
   "description": "Forces Google Search to default to the Web-only tab (udm=14) and strips tracking parameters",
   "icons": {
     "16": "images/icons/16.png",
@@ -29,6 +29,9 @@
         "*://www.google.com.vn/travel/flights*",
         "*://www.google.com/finance*",
         "*://www.google.com.vn/finance*",
+        "*://www.google.com/maps*",
+        "*://www.google.com.vn/maps*",
+        "*://maps.google.com/*",
         "*://www.google.com/webhp*",
         "*://www.google.com.vn/webhp*",
         "*://www.google.com/",
